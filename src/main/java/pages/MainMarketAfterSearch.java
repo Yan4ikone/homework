@@ -14,6 +14,7 @@ public class MainMarketAfterSearch {
 
     private WebDriver driver;
     private WebDriverWait wait;
+    private String getTitle;
 
     public WebDriver getWebDriver() {
         return driver;
@@ -37,5 +38,10 @@ public class MainMarketAfterSearch {
         Set<String> tabs =driver.getWindowHandles();
         for (String tab:tabs)
             driver.switchTo().window(tab);
+    }
+
+    public String getTitle() {
+        getTitle = driver.getTitle();
+        return getTitle;
     }
 }

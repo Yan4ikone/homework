@@ -16,7 +16,6 @@ public class BaseTest {
     public void before() {
         //System.setProperty("webdriver.chrome.driver","C:\\tmp\\chromedriver.exe");
         System.setProperty("webdriver.chrome.driver",System.getenv("CHROME_DRIVER"));
-        //chromeDriver = new ChromeDriver();
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.PAGE_LOAD_STRATEGY, "none");
         chromeDriver = new ChromeDriver(capabilities);
