@@ -22,12 +22,15 @@ public class MainMarketAfterSearch {
 
     public MainMarketAfterSearch(WebDriver webDriver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, 10);
+        this.wait = new WebDriverWait(driver, 7);
         driver.get("https://market.yandex.ru/");
+        wait.until(visibilityOfElementLocated(By.xpath("//div[@data-baobab-name='login_popup']")));
+
     }
 
     public void checkingTitleAfterClickLaptops () {
-        //wait.until(driver.getCurrentUrl().contains("")); // Ожидание загрузки тайтла
+        wait.until(visibilityOfElementLocated(By.xpath("//a[@href='/catalog--noutbuki/26895412/list?hid=91013']")));
+
         Assertions.assertFalse(driver.getCurrentUrl().contains("catalog--noutbuki")); // Исправить т.к. фолс ассерт
     }
 
