@@ -13,9 +13,6 @@ public class PageFactoryMainMarket {
 
 private WebDriver driver;
 
-@FindBy(how = How.XPATH, using = "//div[@data-baobab-name='headerPromo']")
-    WebElement falseButton;
-
 @FindBy(how = How.XPATH, using = "//div[@data-zone-name ='catalog']")
     WebElement buttonCatalog;
 
@@ -25,42 +22,24 @@ private WebDriver driver;
 @FindBy(how = How.XPATH, using = "//li[@data-zone-name='category-link']/a[@href='https://market.yandex.ru/special/electronics_dep']")
     WebElement electronicTab;
 
-@FindBy(how = How.XPATH, using = "https://market.yandex.ru/catalog--noutbuki/")
+@FindBy(how = How.XPATH, using = "//h1[contains(text(), 'Ноутбуки')]")
     WebElement headerAfterClick;
 
     public PageFactoryMainMarket(WebDriver chromeDriver) {
         this.driver = chromeDriver;
     }
 
-    public void find(String word) {
-        driver.get("https://market.yandex.ru/");
-
+    public void find() {
         Actions actions = new Actions(driver);
-
-        falseButton.click();
+        driver.get("https://market.yandex.ru/");
+        actions.moveByOffset(10,10).click().perform();
         buttonCatalog.click();
         actions.moveToElement(electronicTab).perform();
         buttonLaptops.click();
-        word = driver.getTitle();
+
     }
 
-    public WebElement getButtonCatalog() {
-        return buttonCatalog;
-    }
-
-    public WebElement getButtonLaptops() {
-        return buttonLaptops;
-    }
-
-    public WebElement getFalseButton() {
-        return falseButton;
-    }
-
-    public WebElement getElectronicTab() {
-        return electronicTab;
-    }
-
-    public WebElement getLinkAfterClick() {
+    public WebElement getHeaderAfterClick(String title) {
         return headerAfterClick;
     }
 }
