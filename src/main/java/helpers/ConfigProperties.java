@@ -17,8 +17,11 @@ public interface ConfigProperties extends Config {
     @Config.Key("laptopAfterSearch.url")
     String laptopAfterSearchUrl();
 
+    @Config.Key("laptop.title")
+    String laptopTitle();
+
     @Config.Key("first.product")
-    String firsProduct();
+    String firstProduct();
 
     @Config.Key("second.product")
     String secondProduct();
@@ -27,10 +30,10 @@ public interface ConfigProperties extends Config {
     List<String>products();
 
     @Config.Key("start.price")
-    Integer startPrice();
+    String startPrice();
 
     @Config.Key("end.price")
-    Integer endPrice();
+    String endPrice();
 
     @Config.Key("time.out")
     Integer timeOut();

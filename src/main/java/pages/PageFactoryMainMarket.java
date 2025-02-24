@@ -1,17 +1,20 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static helpers.Properties.configProperties;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 
 public class PageFactoryMainMarket {
@@ -43,20 +46,21 @@ private Actions actions;
     /**
      * Открытие каталога, наведение на "Электроника" и переход в "Ноутбуки".
      */
-    public void find() {
-        driver.get("https://market.yandex.ru/");
+     public void find(String url) {
+        driver.get(url);
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id='/marketfrontDynamicPopupLoader42/content']")));
         actions.moveByOffset(10,10).click().perform();
+        wait.until(visibilityOfAllElements(buttonCatalog));
         buttonCatalog.click();
         actions.moveToElement(electronicTab).perform();
         buttonLaptops.click();
-    }
+     }
 
     /**
      * Проверка заголовка после перехода в раздел "Ноутбуки".
      */
-    public void checkTitleByLink(String link) {
-        wait.until(visibilityOfElementLocated(By.xpath("//h1[contains(text(), 'Ноутбуки')]")));
-        Assertions.assertFalse(driver.findElements(By.xpath("//h1[contains(text(),'"+link+"')]")).size()==0,
-                "Не найден title с текстом '" +link);
+    public void checkTitleByLink(String title) {
+        wait.until(visibilityOfAllElements(headerAfterClick));
+        Assertions.assertTrue(driver.getTitle().contains(title), "Ошибка, заголовок не найден, Ваш заголовок: " +title);
     }
 }

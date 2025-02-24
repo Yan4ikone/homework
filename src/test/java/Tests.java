@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
@@ -25,7 +26,7 @@ public class Tests extends BaseTest {
     public void testMainPageYandex(String word, String result){
         chromeDriver.get(configProperties.baseUrl());
         PageFactoryMainMarket pageFactoryMainMarket = PageFactory.initElements(chromeDriver,PageFactoryMainMarket.class);
-        pageFactoryMainMarket.find();
+        //pageFactoryMainMarket.find();
        // Assertions.assertTrue(pageFactoryMainMarket.getHeaderAfterClick(result).getText().contains(word), "Title is not correct " + result + " - is your title");
 
     }
@@ -38,29 +39,27 @@ public class Tests extends BaseTest {
                                    String resultOfElements) {
         chromeDriver.get(configProperties.baseUrl());
         PageFactoryMainMarket pageFactoryMainMarket = PageFactory.initElements(chromeDriver,PageFactoryMainMarket.class);
-        pageFactoryMainMarket.find();
+       // pageFactoryMainMarket.find();
         PageFactoryLaptopsMarket pageFactoryLaptopsMarket = PageFactory.initElements(chromeDriver,PageFactoryLaptopsMarket.class);
         pageFactoryLaptopsMarket.setParameters(startPrice, endPrice, firstProduct, secondProduct);
         Assertions.assertTrue(pageFactoryLaptopsMarket.getNumbersOfElements(), "Title is not correct " + resultOfElements + " - is your title");
-
     }
 
     @Feature("Проверка соответствия элементов заданным параметрам")
     @DisplayName("Проверка результатов ввода и вывода")
     @ParameterizedTest(name = "{displayName} : {arguments}")
     @MethodSource({"helpers.DataProvider#providerCheckingElementsList"})
-    public void testLaptopsAfterSearchPageYandex(String title) {
-        openSite("https://market.yandex.ru/","Ноутбуки",chromeDriver);
-        checkHeaderLaptops(title);
-        checkNumbersOfElements();
-        checkAllElementsEqualsChoice();
+    public void testLaptopsAfterSearchPageYandex() {
+        openSite(configProperties.baseUrl(), chromeDriver);
+        checkHeaderLaptops("Ноутбуки", chromeDriver);
+        setFinderParameters(configProperties.startPrice(),
+                configProperties.endPrice(),
+                configProperties.firstProduct(),
+                configProperties.secondProduct(),
+                chromeDriver
+        );
+        checkNumbersOfElements(chromeDriver);
+        checkAllElementsEqualsChoice(chromeDriver);
 
-        /*PageFactoryLaptopsAfterSearch pageFactoryLaptopsAfterSearch = PageFactory.initElements(chromeDriver,PageFactoryLaptopsAfterSearch.class);
-        //pageFactoryLaptopsAfterSearch.comparingElementsWithInputParameters(results);
-        Assertions.assertTrue(results.contains(configProperties.products()), "Бренд указан не верно: " + results + " - указан бренд");*/
     }
-
-
-
-
 }

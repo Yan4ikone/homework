@@ -46,6 +46,9 @@ public class PageFactoryLaptopsMarket {
     @FindBy(how = How.XPATH, using = "//h3[@data-zone-name='title']")
     List<WebElement> productTitles;
 
+    @FindBy(how = How.XPATH, using = "//*[@id='/marketfrontSerpLayout']")
+    List<WebElement> productChoice;
+
 
 
     public PageFactoryLaptopsMarket(WebDriver driver) {
@@ -57,41 +60,32 @@ public class PageFactoryLaptopsMarket {
 
     public void setParameters(String startPrice, String endPrice,
                               String firstProduct, String secondProduct) {
-
-        this.wait = new WebDriverWait(driver, 10);
-        driver.get(configProperties.laptopUrl());
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='range-filter-field-glprice_25563_min']")));
-        actions.moveByOffset(10,10).click().perform();
         buttonStartPrice.click();
         buttonStartPrice.sendKeys(startPrice);
         buttonEndPrice.click();
         buttonEndPrice.sendKeys(endPrice);
+        JavascriptExecutor scroll = (JavascriptExecutor)driver;
+        scroll.executeScript("window.scrollBy(0,350)");
+        wait.until(ExpectedConditions.visibilityOfAllElements(productChoice));
         buttonShowAll.click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@placeholder='Найти']")));
+        wait.until(ExpectedConditions.visibilityOfAllElements(searchField));
         searchField.click();
+        wait.until(ExpectedConditions.visibilityOfAllElements(searchField));
         searchField.sendKeys(firstProduct);
+        wait.until(ExpectedConditions.visibilityOfAllElements(productChoice));
         buttonHewlett.click();
-        wait.until(visibilityOfAllElements(productList));
+        wait.until(ExpectedConditions.visibilityOfAllElements(productChoice));
         searchField.clear();
         searchField.sendKeys(secondProduct);
+        wait.until(ExpectedConditions.visibilityOfAllElements(buttonLenovo));
         buttonLenovo.click();
-
-
     }
 
     public boolean getNumbersOfElements() {
         wait.until(visibilityOfAllElements(productList));
         return productList.size() > 12;
-
     }
-
-    public boolean allElementsEqualsChoice(String productName) {
-        wait.until(visibilityOfAllElements(productList));
-        JavascriptExecutor scroll = (JavascriptExecutor)driver;
-        scroll.executeScript("window.scrollBy(0,250)");
-        return productTitles.stream().allMatch(x -> x.getText().contains(productName));
-    }
-
 }
 
 
