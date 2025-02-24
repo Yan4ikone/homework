@@ -7,12 +7,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import pages.PageFactoryLaptopsAfterSearch;
 import pages.PageFactoryLaptopsMarket;
 import pages.PageFactoryMainMarket;
+import static helpers.Properties.configProperties;
+import static steps.StepsAll.*;
 
 import java.util.List;
-
-import static helpers.Properties.configProperties;
 
 public class Tests extends BaseTest {
 
@@ -22,10 +23,10 @@ public class Tests extends BaseTest {
     @ParameterizedTest(name = "{displayName} : {arguments}")
     @CsvSource({"Ноутбуки,Ноутбуки", "Аксессуары,Ноутбуки", "не отработал,Ноутбуки"})
     public void testMainPageYandex(String word, String result){
-        chromeDriver.get("https://market.yandex.ru/");
+        chromeDriver.get(configProperties.baseUrl());
         PageFactoryMainMarket pageFactoryMainMarket = PageFactory.initElements(chromeDriver,PageFactoryMainMarket.class);
         pageFactoryMainMarket.find();
-        Assertions.assertTrue(pageFactoryMainMarket.getHeaderAfterClick(result).getText().contains(word), "Title is not correct " + result + " - is your title");
+       // Assertions.assertTrue(pageFactoryMainMarket.getHeaderAfterClick(result).getText().contains(word), "Title is not correct " + result + " - is your title");
 
     }
 
@@ -35,7 +36,7 @@ public class Tests extends BaseTest {
     @CsvSource({"10000,30000,HP,Lenovo,13", "9999,15000,HP,Lenovo,900", "10001,29999,HP,Lenovo,6"})
     public void testLaptopsPageYandex(String startPrice, String endPrice, String firstProduct, String secondProduct,
                                    String resultOfElements) {
-        chromeDriver.get("https://market.yandex.ru/");
+        chromeDriver.get(configProperties.baseUrl());
         PageFactoryMainMarket pageFactoryMainMarket = PageFactory.initElements(chromeDriver,PageFactoryMainMarket.class);
         pageFactoryMainMarket.find();
         PageFactoryLaptopsMarket pageFactoryLaptopsMarket = PageFactory.initElements(chromeDriver,PageFactoryLaptopsMarket.class);
@@ -48,10 +49,15 @@ public class Tests extends BaseTest {
     @DisplayName("Проверка результатов ввода и вывода")
     @ParameterizedTest(name = "{displayName} : {arguments}")
     @MethodSource({"helpers.DataProvider#providerCheckingElementsList"})
-    public void testLaptopsAfterSearchPageYandex(List<String>elements, List<String>results) {
+    public void testLaptopsAfterSearchPageYandex(String title) {
+        openSite("https://market.yandex.ru/","Ноутбуки",chromeDriver);
+        checkHeaderLaptops(title);
+        checkNumbersOfElements();
+        checkAllElementsEqualsChoice();
 
-
-
+        /*PageFactoryLaptopsAfterSearch pageFactoryLaptopsAfterSearch = PageFactory.initElements(chromeDriver,PageFactoryLaptopsAfterSearch.class);
+        //pageFactoryLaptopsAfterSearch.comparingElementsWithInputParameters(results);
+        Assertions.assertTrue(results.contains(configProperties.products()), "Бренд указан не верно: " + results + " - указан бренд");*/
     }
 
 

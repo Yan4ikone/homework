@@ -1,17 +1,21 @@
 package pages;
 
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+
 
 public class PageFactoryMainMarket {
 
 private WebDriver driver;
+private WebDriverWait wait;
 
 @FindBy(how = How.XPATH, using = "//div[@data-zone-name ='catalog']")
     WebElement buttonCatalog;
@@ -27,6 +31,7 @@ private WebDriver driver;
 
     public PageFactoryMainMarket(WebDriver chromeDriver) {
         this.driver = chromeDriver;
+
     }
 
     public void find() {
@@ -39,7 +44,9 @@ private WebDriver driver;
 
     }
 
-    public WebElement getHeaderAfterClick(String title) {
-        return headerAfterClick;
+    public void checkTitleByLink(String link) {
+        wait.until(visibilityOfElementLocated(By.xpath("//h1[contains(text(), 'Ноутбуки')]")));
+        Assertions.assertFalse(driver.findElements(By.xpath("//h1[contains(text(),'"+link+"')]")).size()==0,
+                "Не найден title с текстом '" +link);
     }
 }

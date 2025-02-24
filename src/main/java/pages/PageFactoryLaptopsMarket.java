@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
+import static helpers.Properties.configProperties;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElements;
 
 public class PageFactoryLaptopsMarket {
@@ -53,8 +54,8 @@ public class PageFactoryLaptopsMarket {
                               String firstProduct, String secondProduct) {
         Actions actions = new Actions(driver);
         this.wait = new WebDriverWait(driver, 10);
+        driver.get(configProperties.laptopUrl());
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='range-filter-field-glprice_25563_min']")));
-        driver.get("https://market.yandex.ru/catalog--noutbuki/26895412/");
         actions.moveByOffset(10,10).click().perform();
         buttonStartPrice.click();
         buttonStartPrice.sendKeys(startPrice);
@@ -69,8 +70,7 @@ public class PageFactoryLaptopsMarket {
         searchField.clear();
         searchField.sendKeys(secondProduct);
         buttonLenovo.click();
-        JavascriptExecutor scroll = (JavascriptExecutor)driver;
-        scroll.executeScript("window.scrollBy(0,250)");
+
 
     }
 
@@ -81,6 +81,9 @@ public class PageFactoryLaptopsMarket {
     }
 
     public boolean allElementsEqualsChoice(String productName) {
+        wait.until(visibilityOfAllElements(productList));
+        JavascriptExecutor scroll = (JavascriptExecutor)driver;
+        scroll.executeScript("window.scrollBy(0,250)");
         return productTitles.stream().anyMatch(x -> x.getText().contains(productName));
     }
 
