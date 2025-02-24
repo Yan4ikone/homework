@@ -21,7 +21,6 @@ public class StepsAll {
     private static WebDriverWait wait;
     private static WebDriver driver;
 
-
     @Step("Переходим на сайт: {url}")
     public static void openSite(String url, String title, WebDriver currentDriver) {
         driver = currentDriver;
@@ -29,7 +28,6 @@ public class StepsAll {
         wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.titleIs(title));
     }
-
 
     @Step("Проверка перехода на страницу Ноутбуки {title}")
     public static void checkHeaderLaptops(String title) {

@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -19,6 +20,7 @@ public class PageFactoryLaptopsMarket {
 
     private WebDriver driver;
     private WebDriverWait wait;
+    private Actions actions;
 
     @FindBy(how = How.XPATH, using = "//*[@id='range-filter-field-glprice_25563_min']")
     WebElement buttonStartPrice;
@@ -48,11 +50,14 @@ public class PageFactoryLaptopsMarket {
 
     public PageFactoryLaptopsMarket(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, configProperties.timeOut());
+        this.actions = new Actions(driver);
+        PageFactory.initElements(driver, this);
     }
 
     public void setParameters(String startPrice, String endPrice,
                               String firstProduct, String secondProduct) {
-        Actions actions = new Actions(driver);
+
         this.wait = new WebDriverWait(driver, 10);
         driver.get(configProperties.laptopUrl());
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='range-filter-field-glprice_25563_min']")));
@@ -84,7 +89,7 @@ public class PageFactoryLaptopsMarket {
         wait.until(visibilityOfAllElements(productList));
         JavascriptExecutor scroll = (JavascriptExecutor)driver;
         scroll.executeScript("window.scrollBy(0,250)");
-        return productTitles.stream().anyMatch(x -> x.getText().contains(productName));
+        return productTitles.stream().allMatch(x -> x.getText().contains(productName));
     }
 
 }

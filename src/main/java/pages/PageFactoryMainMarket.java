@@ -7,8 +7,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static helpers.Properties.configProperties;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
@@ -16,6 +18,7 @@ public class PageFactoryMainMarket {
 
 private WebDriver driver;
 private WebDriverWait wait;
+private Actions actions;
 
 @FindBy(how = How.XPATH, using = "//div[@data-zone-name ='catalog']")
     WebElement buttonCatalog;
@@ -31,19 +34,26 @@ private WebDriverWait wait;
 
     public PageFactoryMainMarket(WebDriver chromeDriver) {
         this.driver = chromeDriver;
+        this.wait = new WebDriverWait(driver, configProperties.timeOut());
+        this.actions = new Actions(driver);
+        PageFactory.initElements(driver, this);
 
     }
 
+    /**
+     * Открытие каталога, наведение на "Электроника" и переход в "Ноутбуки".
+     */
     public void find() {
-        Actions actions = new Actions(driver);
         driver.get("https://market.yandex.ru/");
         actions.moveByOffset(10,10).click().perform();
         buttonCatalog.click();
         actions.moveToElement(electronicTab).perform();
         buttonLaptops.click();
-
     }
 
+    /**
+     * Проверка заголовка после перехода в раздел "Ноутбуки".
+     */
     public void checkTitleByLink(String link) {
         wait.until(visibilityOfElementLocated(By.xpath("//h1[contains(text(), 'Ноутбуки')]")));
         Assertions.assertFalse(driver.findElements(By.xpath("//h1[contains(text(),'"+link+"')]")).size()==0,

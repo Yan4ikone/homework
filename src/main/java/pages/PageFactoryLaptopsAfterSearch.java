@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Collections;
@@ -26,27 +27,18 @@ public class PageFactoryLaptopsAfterSearch {
 
 public PageFactoryLaptopsAfterSearch(WebDriver driver) {
     this.driver = driver;
+    this.wait = new WebDriverWait(driver, configProperties.timeOut());
+    PageFactory.initElements(driver, this);
 }
 
 public boolean comparingElementsWithInputParameters() {
-    driver.get(configProperties.laptopUrl());
     wait.until(visibilityOfAllElements(productList));
     JavascriptExecutor scroll = (JavascriptExecutor)driver;
     scroll.executeScript("window.scrollBy(0,250)");
     wait.until(visibilityOfAllElements(productList));
-    List<WebElement>webElements = productList;
-    for (WebElement element : webElements) {
-        String text = element.getText();
-        boolean containsAtLeastOne = configProperties.products().stream().anyMatch(text::contains);
-        if (!containsAtLeastOne) {
-            return false;
-        }
-
-    }
-    return true;
-
-
-
+    return productList.stream()
+            .map(WebElement::getText)
+            .allMatch(title -> configProperties.products().stream().anyMatch(title::contains));
     }
 }
 
