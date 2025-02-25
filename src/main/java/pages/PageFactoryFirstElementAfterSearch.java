@@ -1,10 +1,12 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
@@ -34,16 +36,20 @@ public class PageFactoryFirstElementAfterSearch {
     }
 
     public void getFirstElement() {
-        wait.until(visibilityOfAllElements(productList));
+        wait.until(ExpectedConditions.visibilityOfAllElements(productList));
+        List<WebElement> productList1 = driver.findElements(By.xpath("//span[@data-auto='snippet-title']"));
+        String textBefore = productList1.getFirst().getText();
         headerSearch.click();
-        headerSearch.sendKeys(productList.getFirst().getText());
-        String textProduct = productList.getFirst().getText();
+        headerSearch.sendKeys(textBefore);
         buttonSearch.click();
-        wait.until(visibilityOfAllElements(productList));
-        if (productList.getFirst().getText().equals(textProduct)) {
+        wait.until(ExpectedConditions.visibilityOfAllElements(productList));
+        PageFactory.initElements(driver, this);
+        List<WebElement>productList2 = driver.findElements(By.xpath("//span[@data-auto='snippet-title']"));
+        String textAfter = productList2.getFirst().getText();
+        if (textAfter.equals(textBefore)) {
             System.out.println("Мои поздравления, отработано верно!");
         } else {
-            System.out.println("Доработай" + textProduct);
+            System.out.println("Доработай " + textBefore + " нужен: " + textAfter);
         }
     }
 }
