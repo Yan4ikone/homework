@@ -43,9 +43,6 @@ public class PageFactoryLaptopsMarket {
     @FindBy(how = How.XPATH, using = "//span[@data-auto='snippet-title']")
     List<WebElement> productList;
 
-    @FindBy(how = How.XPATH, using = "//h3[@data-zone-name='title']")
-    List<WebElement> productTitles;
-
     @FindBy(how = How.XPATH, using = "//*[@id='/marketfrontSerpLayout']")
     List<WebElement> productChoice;
 
