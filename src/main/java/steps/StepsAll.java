@@ -49,10 +49,7 @@ public class StepsAll {
     public static void returnFirstElementToSearch(WebDriver driver) {
         PageFactoryFirstElementAfterSearch pageFactoryFirstElementAfterSearch = new PageFactoryFirstElementAfterSearch(driver);
         pageFactoryFirstElementAfterSearch.getFirstElement();
-
     }
-
-
 }
 
 
