@@ -45,10 +45,10 @@ public class StepsAll {
         return pageFactoryLaptopsAfterSearch.comparingElementsWithInputParameters();
     }
 
-   @Step("Возврат к первому значению поиска {title}")
+   @Step("Возврат к первому значению поиска и сравнение названия с результатами {title}")
     public static void returnFirstElementToSearch(WebDriver driver) {
         PageFactoryFirstElementAfterSearch pageFactoryFirstElementAfterSearch = new PageFactoryFirstElementAfterSearch(driver);
-        pageFactoryFirstElementAfterSearch.getFirstElement();
+        pageFactoryFirstElementAfterSearch.verifyFirstProductSearch();
     }
 }
 

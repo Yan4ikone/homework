@@ -31,7 +31,7 @@ public class PageFactoryLaptopsAfterSearch {
         this.wait = new WebDriverWait(driver, configProperties.timeOut());
         PageFactory.initElements(driver, this);
     }
-
+    //Формирование списка товаров при прокручивании страницы до футера
     public boolean comparingElementsWithInputParameters() {
         while (true) {
             scroll.executeScript("window.scrollTo(0,document.body.scrollHeight);");

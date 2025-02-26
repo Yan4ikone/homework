@@ -18,7 +18,6 @@ import static helpers.Properties.configProperties;
 public class BaseTest {
 
     protected WebDriver chromeDriver;
-
 /**
 * Настройка WebDriver перед каждым тестом.
  */
@@ -37,10 +36,7 @@ public class BaseTest {
     @AfterEach
     public void after(){
         chromeDriver.quit();
-
     }
-
-
 }
 
 

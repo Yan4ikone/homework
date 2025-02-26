@@ -1,65 +1,93 @@
 package pages;
-
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static helpers.Properties.configProperties;
 
 public class PageFactoryFirstElementAfterSearch {
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
-    private WebDriver driver;
-    private WebDriverWait wait;
+    private String savedProductTitle;
 
     @FindBy(how = How.XPATH, using = "//span[@data-auto='snippet-title']")
-    List<WebElement> productList;
+    private List<WebElement> productList;
 
     @FindBy(how = How.XPATH, using = "//*[@id='header-search']")
-    WebElement headerSearch;
+    private WebElement headerSearch;
 
     @FindBy(how = How.XPATH, using = "//span[contains(text(), 'Найти')]")
-    WebElement buttonSearch;
+    private WebElement buttonSearch;
 
     public PageFactoryFirstElementAfterSearch(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, configProperties.timeOut());
         PageFactory.initElements(driver, this);
     }
-
-    public void getFirstElement() {
-        JavascriptExecutor scroll = (JavascriptExecutor)driver;
-        scroll.executeScript("window.scrollTo(0, -document.body.scrollHeight)");
+    //Функция для поднятия страницы вверх до заголовка
+    private void scrollToTop() {
+        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, -document.body.scrollHeight)");
+    }
+    //Возвращаем заголовок первого видимого товара
+    private String getFirstVisibleProductTitle() {
         wait.until(ExpectedConditions.visibilityOfAllElements(productList));
-        List<WebElement> productList1 = driver.findElements(By.xpath("//span[@data-auto='snippet-title']"));
+        return productList.stream()
+                .filter(WebElement::isDisplayed)
+                .findFirst()
+                .map(WebElement::getText)
+                .orElseThrow(() -> new NoSuchElementException("Видимый товар не найден на странице"));
+    }
 
-        for (WebElement product : productList1){
-            if (product.isDisplayed()) {
-                String textBefore = product.getText();
-                headerSearch.click();
-                headerSearch.sendKeys(textBefore);
-                buttonSearch.click();
-                PageFactory.initElements(driver, this);
-                wait.until(ExpectedConditions.visibilityOfAllElements(productList));
-                List<WebElement>productList2 = driver.findElements(By.xpath("//span[@data-auto='snippet-title']"));
-                for (WebElement product2 : productList2) {
-                    if (product2.getText().contains(textBefore)) {
-                        System.out.println("Всё тип-топ");
-                    } else {
-                        System.out.println("Получили: " + textBefore + "не то" );
-                    }
-                }
-                break;
-                }
-        }
+    public void verifyFirstProductSearch() {
+        scrollToTop();
+        savedProductTitle = getFirstVisibleProductTitle();
+        searchForProduct(savedProductTitle); // Используем полное название для поиска
+        verifySearchResults(savedProductTitle); // Передаем полное название для сравнения
+    }
+    //Функция для ввода названия товара в поисковую строку
+    private void searchForProduct(String fullTitle) {
+        wait.until(ExpectedConditions.elementToBeClickable(headerSearch));
+        headerSearch.click();
+        headerSearch.clear();
+        headerSearch.sendKeys(fullTitle); // Используем полное название для поиска
+        wait.until(ExpectedConditions.elementToBeClickable(buttonSearch));
+        buttonSearch.click();
+    }
+    //Сокращаем заголовок до первых 5 слов после запятой
+    private String extractShortTitle(String fullTitle) {
+        String titleBeforeComma = fullTitle.split(",")[0];
+        String[] words = titleBeforeComma.split("\s+");
+        String[] firstFourWords = Arrays.copyOf(words, Math.min(5, words.length));
+        return String.join(" ", firstFourWords);
+    }
+    //Сравниваем товары на странице после поиска с поисковым заголовком
+    private void verifySearchResults(String searchQuery) {
+        wait.until(ExpectedConditions.visibilityOfAllElements(productList));
+        // Получаем короткое название из строки поиска для сравнения
+        String shortSearchTitle = extractShortTitle(searchQuery);
+        List<String> visibleProducts = productList.stream()
+                .filter(WebElement::isDisplayed)
+                .map(WebElement::getText)
+                .map(this::extractShortTitle) // Получаем короткие названия для результатов
+                .toList();
+        // Логируем для отладки
+        System.out.println("Полный поисковый запрос: " + searchQuery);
+        System.out.println("Сокращенное название для сравнения: " + shortSearchTitle);
+        System.out.println("Найденные товары: " + String.join(" ", visibleProducts));
+
+        boolean found = visibleProducts.stream()
+                .anyMatch(product -> product.equalsIgnoreCase(shortSearchTitle));
+
+        Assertions.assertTrue(found, String.format("Товар '%s' не найден в результатах поиска. Полный поисковый запрос: %s Найденные товары: %s", shortSearchTitle, searchQuery, String.join(" ", visibleProducts)));
     }
 }
 

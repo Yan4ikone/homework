@@ -1,21 +1,17 @@
 package pages;
 
-import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static helpers.Properties.configProperties;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
-
 
 public class PageFactoryMainMarket {
 
@@ -40,9 +36,7 @@ private Actions actions;
         this.wait = new WebDriverWait(driver, configProperties.timeOut());
         this.actions = new Actions(driver);
         PageFactory.initElements(driver, this);
-
     }
-
     /**
      * Открытие каталога, наведение на "Электроника" и переход в "Ноутбуки".
      */
@@ -55,7 +49,6 @@ private Actions actions;
         actions.moveToElement(electronicTab).perform();
         buttonLaptops.click();
      }
-
     /**
      * Проверка заголовка после перехода в раздел "Ноутбуки".
      */

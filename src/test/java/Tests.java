@@ -8,8 +8,8 @@ import static steps.StepsAll.*;
 
 public class Tests extends BaseTest {
 
-    @Feature("Проверка соответствия элементов заданным параметрам")
-    @DisplayName("Проверка результатов ввода и вывода")
+    @Feature("Полная проверка соответствия элементов заданным параметрам")
+    @DisplayName("Проверка результатов теста разбитая на Step")
     @ParameterizedTest(name = "{displayName} : {arguments}")
     @MethodSource({"helpers.DataProvider#providerCheckingElementsList"})
     public void testLaptopsAfterSearchPageYandex() {

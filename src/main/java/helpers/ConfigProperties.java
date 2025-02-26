@@ -11,15 +11,6 @@ public interface ConfigProperties extends Config {
     @Config.Key("base.url")
     String baseUrl();
 
-    @Config.Key("laptop.url")
-    String laptopUrl();
-
-    @Config.Key("laptopAfterSearch.url")
-    String laptopAfterSearchUrl();
-
-    @Config.Key("laptop.title")
-    String laptopTitle();
-
     @Config.Key("first.product")
     String firstProduct();
 

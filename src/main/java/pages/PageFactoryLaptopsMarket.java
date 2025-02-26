@@ -46,15 +46,13 @@ public class PageFactoryLaptopsMarket {
     @FindBy(how = How.XPATH, using = "//*[@id='/marketfrontSerpLayout']")
     List<WebElement> productChoice;
 
-
-
     public PageFactoryLaptopsMarket(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, configProperties.timeOut());
         this.actions = new Actions(driver);
         PageFactory.initElements(driver, this);
     }
-
+    //Ввод заданных параметров поиска
     public void setParameters(String startPrice, String endPrice,
                               String firstProduct, String secondProduct) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='range-filter-field-glprice_25563_min']")));
@@ -78,7 +76,7 @@ public class PageFactoryLaptopsMarket {
         wait.until(ExpectedConditions.visibilityOfAllElements(buttonLenovo));
         buttonLenovo.click();
     }
-
+    //Проверка корректного отображения элементов на странице
     public boolean getNumbersOfElements() {
         wait.until(visibilityOfAllElements(productList));
         return productList.size() > 12;
