@@ -20,7 +20,7 @@ public class BaseTest {
     protected WebDriver chromeDriver;
 /**
 * Настройка WebDriver перед каждым тестом.
- */
+*/
     @BeforeEach
     public void before() {
         System.setProperty("webdriver.chrome.driver",System.getenv("CHROME_DRIVER"));

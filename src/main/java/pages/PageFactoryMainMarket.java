@@ -22,14 +22,12 @@ private Actions actions;
 @FindBy(how = How.XPATH, using = "//div[@data-zone-name ='catalog']")
     WebElement buttonCatalog;
 
-@FindBy(how = How.XPATH, using = "//a[@href='/catalog--noutbuki/26895412/list?hid=91013']")
+@FindBy(how = How.XPATH, using = "//a[contains(text(), 'Ноутбуки')]")
     WebElement buttonLaptops;
 
-@FindBy(how = How.XPATH, using = "//li[@data-zone-name='category-link']/a[@href='https://market.yandex.ru/special/electronics_dep']")
+@FindBy(how = How.XPATH, using = "//span[text()='Электроника']")
     WebElement electronicTab;
 
-@FindBy(how = How.XPATH, using = "//h1[contains(text(), 'Ноутбуки')]")
-    WebElement headerAfterClick;
 
     public PageFactoryMainMarket(WebDriver chromeDriver) {
         this.driver = chromeDriver;
@@ -49,11 +47,5 @@ private Actions actions;
         actions.moveToElement(electronicTab).perform();
         buttonLaptops.click();
      }
-    /**
-     * Проверка заголовка после перехода в раздел "Ноутбуки".
-     */
-    public void checkTitleByLink(String title) {
-        wait.until(visibilityOfAllElements(headerAfterClick));
-        Assertions.assertTrue(driver.getTitle().contains(title), "Ошибка, заголовок не найден, Ваш заголовок: " +title);
-    }
+
 }

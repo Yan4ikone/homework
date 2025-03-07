@@ -10,18 +10,15 @@ public class Tests extends BaseTest {
 
     @Feature("Полная проверка соответствия элементов заданным параметрам")
     @DisplayName("Проверка результатов теста разбитая на Step")
-    @ParameterizedTest(name = "{displayName} : {arguments}")
-    @MethodSource({"helpers.DataProvider#providerCheckingElementsList"})
-    public void testLaptopsAfterSearchPageYandex() {
+    @ParameterizedTest(name = "{displayName}: {arguments}")
+    @MethodSource("helpers.DataProvider#providerCheckingElements")
+    public void testLaptopsAfterSearchPageYandex(String title,String startPrice, String endPrice,
+                                                 String firstProduct, String secondProduct, String findElement) {
         openSite(configProperties.baseUrl(), chromeDriver);
-        checkHeaderLaptops("Ноутбуки", chromeDriver);
-        setFinderParameters(configProperties.startPrice(),
-                configProperties.endPrice(),
-                configProperties.firstProduct(),
-                configProperties.secondProduct(),
-                chromeDriver);
-        checkNumbersOfElements(chromeDriver);
-        checkAllElementsEqualsChoice(chromeDriver);
-        returnFirstElementToSearch(chromeDriver);
+        checkHeaderLaptops(title);
+        setFinderParameters(startPrice, endPrice, firstProduct, secondProduct);
+        checkNumbersOfElements(findElement);
+        checkAllElementsEqualsChoice();
+        returnFirstElementToSearch();
     }
 }

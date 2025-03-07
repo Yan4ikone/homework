@@ -1,4 +1,4 @@
-package pages;
+package helpers;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -6,33 +6,42 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
 import static helpers.Properties.configProperties;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElements;
 
-public class PageFactoryLaptopsAfterSearch {
+public class Assertions {
 
     private WebDriver driver;
     private WebDriverWait wait;
-    private long lastHeight;
     private JavascriptExecutor scroll;
+    private long lastHeight;
+
+    @FindBy(how = How.XPATH, using = "//h1[contains(text(), 'Ноутбуки')]")
+    WebElement headerAfterClick;
 
     @FindBy(how = How.XPATH, using = "//span[@data-auto='snippet-title']")
     List<WebElement> productList;
 
-    public PageFactoryLaptopsAfterSearch(WebDriver driver) {
-        this.driver = driver;
-        this.scroll = (JavascriptExecutor) driver;
-        this.lastHeight = (long) scroll.executeScript("return document.body.scrollHeight");
-        this.wait = new WebDriverWait(driver, configProperties.timeOut());
-        PageFactory.initElements(driver, this);
+    /**
+     * Проверка заголовка после перехода в раздел "Ноутбуки".
+     */
+    public void checkTitleByLink(String title) {
+        wait.until(visibilityOfAllElements(headerAfterClick));
+        org.junit.jupiter.api.Assertions.assertTrue(driver.getTitle().contains(title), "Ошибка, заголовок не найден, Ваш заголовок: " + title);
     }
-    //Формирование списка товаров при прокручивании страницы до футера
-    public boolean comparingElementsWithInputParameters() {
+
+    //Проверка корректного отображения элементов на странице
+    public void getNumbersOfElements(String findElement) {
+        wait.until(visibilityOfAllElements(productList));
+        org.junit.jupiter.api.Assertions.assertTrue(productList.size() > 12);
+    }
+
+    public void comparingElementsWithInputParameters() {
         while (true) {
             scroll.executeScript("window.scrollTo(0,document.body.scrollHeight);");
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='/marketfrontSerpLayout']")));
@@ -43,12 +52,10 @@ public class PageFactoryLaptopsAfterSearch {
             lastHeight = newHeight;
             List<WebElement> productList1 = driver.findElements(By.xpath("//span[@data-auto='snippet-title']"));
 
-            return productList1.stream()
+            org.junit.jupiter.api.Assertions.assertTrue(productList1.stream()
                     .map(WebElement::getText)
-                    .allMatch(title -> configProperties.products().stream().anyMatch(title::contains));
+                    .allMatch(title -> configProperties.products().stream().anyMatch(title::contains)));
+
         }
-        return false;
     }
 }
-
-
