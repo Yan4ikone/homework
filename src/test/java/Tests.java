@@ -6,8 +6,21 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static helpers.Properties.configProperties;
 import static steps.StepsAll.*;
 
-public class Tests extends BaseTest {
+/**
+ * Тестовый класс.
+ * @author Yan
+ */
 
+public class Tests extends BaseTest {
+/** Тестовый класс является наследником BaseTest.
+* @param title - заголовок
+* @param startPrice - цена "от"
+* @param endPrice - цена "до"
+* @param firstProduct - первый производитель
+* @param secondProduct - второй производитель
+* @param findElement - количество сравниваемых элементов
+* Класс разбит на шаги {@link steps.StepsAll}
+*/
     @Feature("Полная проверка соответствия элементов заданным параметрам")
     @DisplayName("Проверка результатов теста разбитая на Step")
     @ParameterizedTest(name = "{displayName}: {arguments}")

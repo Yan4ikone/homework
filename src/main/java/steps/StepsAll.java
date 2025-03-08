@@ -3,7 +3,6 @@ package steps;
 import helpers.Assertions;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import pages.PageFactoryLaptopsMarket;
 import pages.PageFactoryMainMarket;
 
@@ -12,14 +11,16 @@ public class StepsAll {
     private static WebDriver driver;
 
     @Step("Переходим на сайт: {url}")
-    public static void openSite(String url, WebDriver driver) {
+    public static void openSite(String url, WebDriver currentDriver) {
+        driver = currentDriver;
+        driver.get(url);
         PageFactoryMainMarket pageFactoryMainMarket = new PageFactoryMainMarket(driver);
         pageFactoryMainMarket.find(url);
     }
 
     @Step("Проверка перехода на страницу Ноутбуки {title}")
     public static void checkHeaderLaptops(String title) {
-        Assertions assertions = new Assertions();
+        Assertions assertions = new Assertions(driver);
         assertions.checkTitleByLink(title);
     }
 
@@ -32,13 +33,13 @@ public class StepsAll {
 
     @Step("Проверка поиска количества элементов больше 12")
     public static void checkNumbersOfElements(String findElement) {
-        Assertions assertions = new Assertions();
+        Assertions assertions = new Assertions(driver);
         assertions.getNumbersOfElements(findElement);
     }
 
     @Step("Проверка соответствия элементов заданному поиску")
     public static void checkAllElementsEqualsChoice() {
-        Assertions assertions = new Assertions();
+        Assertions assertions = new Assertions(driver);
         assertions.comparingElementsWithInputParameters();
     }
 

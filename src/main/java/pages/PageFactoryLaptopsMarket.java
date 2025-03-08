@@ -69,14 +69,14 @@ public class PageFactoryLaptopsMarket {
     //Ввод заданных параметров поиска
     public void setParameters(String startPrice, String endPrice,
                               String firstProduct, String secondProduct) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='range-filter-field-glprice_25563_min']")));
+        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='range-filter-field-glprice_25563_min']")));
         buttonStartPrice.click();
         buttonStartPrice.sendKeys(startPrice);
         buttonEndPrice.click();
         buttonEndPrice.sendKeys(endPrice);
         wait.until(ExpectedConditions.visibilityOfAllElements(productChoice));
         buttonShowAll.click();
-        wait.until(ExpectedConditions.visibilityOfAllElements(searchField));
+        //wait.until(ExpectedConditions.visibilityOfAllElements(searchField));
         searchField.click();
         wait.until(ExpectedConditions.visibilityOfAllElements(searchField));
         searchField.sendKeys(firstProduct);
@@ -140,7 +140,9 @@ public class PageFactoryLaptopsMarket {
         boolean found = visibleProducts.stream()
                 .anyMatch(product -> product.equalsIgnoreCase(shortSearchTitle));
 
-        Assertions.assertTrue(found, String.format("Товар '%s' не найден в результатах поиска. Полный поисковый запрос: %s Найденные товары: %s", shortSearchTitle, searchQuery, String.join(" ", visibleProducts)));
+        Assertions.assertTrue(found, String.format("Товар '%s' не найден в результатах поиска. " +
+                "Полный поисковый запрос: %s Найденные товары: %s",
+                shortSearchTitle, searchQuery, String.join(" ", visibleProducts)));
     }
 
 
