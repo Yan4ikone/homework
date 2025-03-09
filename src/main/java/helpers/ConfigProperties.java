@@ -11,9 +11,6 @@ public interface ConfigProperties extends Config {
     @Config.Key("base.url")
     String baseUrl();
 
-    @Config.Key("list.products")
-    List<String>products();
-
     @Config.Key("time.out")
     Integer timeOut();
 }

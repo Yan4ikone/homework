@@ -44,12 +44,12 @@ public class Assertions {
     }
 
     //Проверка корректного отображения элементов на странице
-    public void getNumbersOfElements(String findElement) {
+    public void getNumbersOfElements(int findElement) {
         wait.until(ExpectedConditions.visibilityOfAllElements(productList));
-        org.junit.jupiter.api.Assertions.assertTrue(productList.size() > 12);
+        org.junit.jupiter.api.Assertions.assertTrue(productList.size() > findElement);
     }
 
-    public void comparingElementsWithInputParameters() {
+    public void comparingElementsWithInputParameters(List<String> elements) {
         while (true) {
             scroll.executeScript("window.scrollTo(0,document.body.scrollHeight);");
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='/marketfrontSerpLayout']")));
@@ -59,10 +59,9 @@ public class Assertions {
             }
             lastHeight = newHeight;
             List<WebElement> productList1 = driver.findElements(By.xpath("//span[@data-auto='snippet-title']"));
-
             org.junit.jupiter.api.Assertions.assertTrue(productList1.stream()
                     .map(WebElement::getText)
-                    .allMatch(title -> configProperties.products().stream().anyMatch(title::contains)));
+                    .allMatch(title -> elements.stream().anyMatch(title::contains)));
 
         }
     }

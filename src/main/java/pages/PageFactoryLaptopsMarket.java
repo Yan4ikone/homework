@@ -1,7 +1,6 @@
 package pages;
 
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -76,7 +75,6 @@ public class PageFactoryLaptopsMarket {
         buttonEndPrice.sendKeys(endPrice);
         wait.until(ExpectedConditions.visibilityOfAllElements(productChoice));
         buttonShowAll.click();
-        //wait.until(ExpectedConditions.visibilityOfAllElements(searchField));
         searchField.click();
         wait.until(ExpectedConditions.visibilityOfAllElements(searchField));
         searchField.sendKeys(firstProduct);
@@ -144,8 +142,6 @@ public class PageFactoryLaptopsMarket {
                 "Полный поисковый запрос: %s Найденные товары: %s",
                 shortSearchTitle, searchQuery, String.join(" ", visibleProducts)));
     }
-
-
 }
 
 
