@@ -14,28 +14,28 @@ import java.util.List;
 public class StepsAll {
     /** Инициализация статической переменной {@link WebDriver}  */
     private static WebDriver driver;
-    /** Функция перехода на сайт.
-     * @see pages.PageFactoryMainMarket#find
-     * @param url - начальный url "https://market.yandex.ru/"
-     * @param currentDriver - переменная веб-драйвера
+    /** Переход на сайт.
+     * @see PageFactoryMainMarket#find
+     * @param url - начальный url "<a href="https://market.yandex.ru/">...</a>"
+     * @param currentDriver - экземпляр веб-драйвера
      */
-    @Step("Переходим на сайт: {url}")
+    @Step("Переход на сайт: {url}")
     public static void openSite(String url, WebDriver currentDriver) {
         driver = currentDriver;
         driver.get(url);
         PageFactoryMainMarket pageFactoryMainMarket = new PageFactoryMainMarket(driver);
         pageFactoryMainMarket.find(url);
     }
-    /** Функция проверки заголовка на странице.
+    /** Проверка заголовка на странице.
      * @see helpers.Assertions#checkTitleByLink
-     * @param title - наименование заголовка
+     * @param title - ожидаемый заголовок страницы
      */
     @Step("Проверка перехода на страницу Ноутбуки {title}")
     public static void checkHeaderLaptops(String title) {
         Assertions assertions = new Assertions(driver);
         assertions.checkTitleByLink(title);
     }
-    /** Функция ввода значений по параметрам.
+    /** Ввод параметров поиска.
      * @param startPrice - цена "от"
      * @param endPrice - цена "до"
      * @param firstProduct - первый производитель
@@ -48,8 +48,8 @@ public class StepsAll {
         PageFactoryLaptopsMarket pageFactoryLaptopsMarket = new PageFactoryLaptopsMarket(driver);
         pageFactoryLaptopsMarket.setParameters(startPrice, endPrice, firstProduct, secondProduct);
     }
-    /** Функция проверки соответствия количества элементов.
-     * @param findElement - количество сравниваемых элементов
+    /** Проверка соответствия количества элементов.
+     * @param findElement - ожидаемое количество сравниваемых элементов
      * @see helpers.Assertions#getNumbersOfElements
      */
     @Step("Проверка поиска количества элементов, с сравнением {findElement}")
@@ -57,7 +57,7 @@ public class StepsAll {
         Assertions assertions = new Assertions(driver);
         assertions.getNumbersOfElements(findElement);
     }
-    /** Функция проверки соответствия элементов по заданному поиску, со значениями {elements}
+    /** Проверка соответствия найденных элементов, заданным параметрам
      *  @param elements - наименование фирм-производителей
      *  @see Assertions#comparingElementsWithInputParameters
      */
@@ -66,7 +66,9 @@ public class StepsAll {
         Assertions assertions = new Assertions(driver);
         assertions.comparingElementsWithInputParameters(elements);
     }
-
+    /**
+     * Возвращение к первому значению поиска и сравнение названия с результатами.
+     */
     @Step("Возврат к первому значению поиска и сравнение названия с результатами ")
     public static void returnFirstElementToSearch() {
         PageFactoryLaptopsMarket pageFactoryLaptopsMarket = new PageFactoryLaptopsMarket(driver);

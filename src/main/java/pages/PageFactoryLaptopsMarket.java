@@ -1,10 +1,11 @@
 package pages;
 
+import helpers.ConfigProperties;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
@@ -16,20 +17,20 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static helpers.Properties.configProperties;
-
+/**
+ * Класс страницы ноутбуки ЯндексМаркет.
+ * @author Yan
+ */
 public class PageFactoryLaptopsMarket {
-
+    /** Переменная {@link WebDriver} */
     private WebDriver driver;
+    /** Переменная ожидания {@link WebDriverWait} */
     private WebDriverWait wait;
-    private Actions actions;
 
-
-    private String savedProductTitle;
-
-    @FindBy(how = How.XPATH, using = "//*[@id='range-filter-field-glprice_25563_min']")
+    @FindBy(how = How.XPATH, using = "//input[contains(@id, 'range-filter-field-glprice') and contains(@id, '_min')]")
     WebElement buttonStartPrice;
 
-    @FindBy(how = How.XPATH, using = "//*[@id='range-filter-field-glprice_25563_max']")
+    @FindBy(how = How.XPATH, using = "//input[contains(@id, 'range-filter-field-glprice') and contains(@id, '_max')]")
     WebElement buttonEndPrice;
 
     @FindBy(how = How.XPATH, using = "//span[contains(text(), 'Показать всё')]")
@@ -44,7 +45,8 @@ public class PageFactoryLaptopsMarket {
     @FindBy(how = How.XPATH, using = "//span[text()='Lenovo']")
     WebElement buttonLenovo;
 
-    @FindBy(how = How.XPATH, using = "//span[@data-auto='snippet-title']")
+    @FindBy(how = How.XPATH, using = "//span[@data-auto='snippet-title' " +
+            "and not(ancestor::*[@data-auto='searchIncut'])]")
     List<WebElement> productList;
 
     @FindBy(how = How.XPATH, using = "//*[@id='/marketfrontSerpLayout']")
@@ -55,51 +57,53 @@ public class PageFactoryLaptopsMarket {
 
     @FindBy(how = How.XPATH, using = "//span[contains(text(), 'Найти')]")
     private WebElement buttonSearch;
-
-
-
+    /**
+     * Конструктор процедуры инициализации {@link WebDriver}.
+     * @param driver - передаваемое значение {@link WebDriver}
+     * @see ConfigProperties#timeOut() параметры конфигурации
+     */
     public PageFactoryLaptopsMarket(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, configProperties.timeOut());
-        this.actions = new Actions(driver);
         PageFactory.initElements(driver, this);
     }
 
-    //Ввод заданных параметров поиска
+    /** Функция ввода значений по параметрам.
+     * @param startPrice - цена "от"
+     * @param endPrice - цена "до"
+     * @param firstProduct - первый производитель
+     * @param secondProduct - второй производитель
+     */
     public void setParameters(String startPrice, String endPrice,
                               String firstProduct, String secondProduct) {
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='range-filter-field-glprice_25563_min']")));
-        buttonStartPrice.click();
         buttonStartPrice.sendKeys(startPrice);
-        buttonEndPrice.click();
         buttonEndPrice.sendKeys(endPrice);
         wait.until(ExpectedConditions.visibilityOfAllElements(productChoice));
         buttonShowAll.click();
-        searchField.click();
         wait.until(ExpectedConditions.visibilityOfAllElements(searchField));
         searchField.sendKeys(firstProduct);
         wait.until(ExpectedConditions.visibilityOfAllElements(productChoice));
+        this.buttonHewlett = driver.findElement(By.xpath(STR."//span[text()='\{firstProduct}']"));
         buttonHewlett.click();
         wait.until(ExpectedConditions.visibilityOfAllElements(productChoice));
         searchField.clear();
         searchField.sendKeys(secondProduct);
+        this.buttonHewlett = driver.findElement(By.xpath(STR."//span[text()='\{secondProduct}']"));
         wait.until(ExpectedConditions.visibilityOfAllElements(buttonLenovo));
         buttonLenovo.click();
     }
-
-
-    //Функция для поднятия страницы вверх до заголовка
-    private void scrollToTop() {
-        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, -document.body.scrollHeight)");
-    }
-
+    /**
+     * Функция поиска первого товара
+     */
     public void verifyFirstProductSearch() {
-        scrollToTop();
-        savedProductTitle = getFirstVisibleProductTitle();
+        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, -document.body.scrollHeight)");
+        String savedProductTitle = getFirstVisibleProductTitle();
         searchForProduct(savedProductTitle); // Используем полное название для поиска
         verifySearchResults(savedProductTitle); // Передаем полное название для сравнения
     }
-    //Возвращаем заголовок первого видимого товара
+    /**
+     * Функция возвращения заголовка первого товара
+     */
     private String getFirstVisibleProductTitle() {
         wait.until(ExpectedConditions.visibilityOfAllElements(productList));
         return productList.stream()
@@ -108,24 +112,30 @@ public class PageFactoryLaptopsMarket {
                 .map(WebElement::getText)
                 .orElseThrow(() -> new NoSuchElementException("Видимый товар не найден на странице"));
     }
-    //Функция для ввода названия товара в поисковую строку
+    /**
+     * Функция для ввода названия товара в поисковую строку
+     * @param  fullTitle - наименование товара поиска
+     */
     private void searchForProduct(String fullTitle) {
         wait.until(ExpectedConditions.elementToBeClickable(headerSearch));
         headerSearch.click();
-        headerSearch.clear();
         headerSearch.sendKeys(fullTitle); // Используем полное название для поиска
         wait.until(ExpectedConditions.elementToBeClickable(buttonSearch));
         buttonSearch.click();
     }
-
-    //Сокращаем заголовок до первых 5 слов после запятой
+    /**
+     * Функция парсинга заголовка
+     * @param fullTitle - полное наименование заголовка {@link }
+     */
     private String extractShortTitle(String fullTitle) {
         String titleBeforeComma = fullTitle.split(",")[0];
-        String[] words = titleBeforeComma.split("\s+");
+        String[] words = titleBeforeComma.split(" +");
         String[] firstFourWords = Arrays.copyOf(words, Math.min(5, words.length));
         return String.join(" ", firstFourWords);
     }
-    //Сравниваем товары на странице после поиска с поисковым заголовком
+    /**
+     * Функция сравнения товаров на странице после поиска с поисковым заголовком
+     */
     private void verifySearchResults(String searchQuery) {
         wait.until(ExpectedConditions.visibilityOfAllElements(productList));
         // Получаем короткое название из строки поиска для сравнения

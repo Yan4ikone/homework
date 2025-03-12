@@ -1,7 +1,6 @@
 package pages;
 
 import helpers.ConfigProperties;
-import helpers.Properties;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,7 +20,7 @@ import static helpers.Properties.configProperties;
 public class PageFactoryMainMarket {
 /** Переменная {@link WebDriver} */
 private WebDriver driver;
-/** Переменная ожидания {@link WebDriver} */
+/** Переменная ожидания {@link WebDriverWait} */
 private WebDriverWait wait;
 /** Переменная действия {@link WebDriver} */
 private Actions actions;
@@ -32,8 +31,7 @@ private Actions actions;
 @FindBy(how = How.XPATH, using = "//a[text()='Ноутбуки']")
     WebElement buttonLaptops;
     /** Вкладка электроника типа {@link WebElement}, по типу поиска XPath */
-@FindBy(how = How.XPATH, using = "//li[@data-zone-name='category-link']" +
-        "/a[@href='https://market.yandex.ru/special/electronics_dep']")
+@FindBy(how = How.XPATH, using = "//li[@data-zone-name='category-link']/a[contains(@href, 'electronics_dep')]")
     WebElement electronicTab;
     /** Всплывающее окно типа {@link WebElement}, по типу поиска XPath */
 @FindBy(how = How.XPATH, using = "//div[@data-baobab-name='login_popup']")
